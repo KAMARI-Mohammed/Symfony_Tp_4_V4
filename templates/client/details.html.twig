@@ -1,0 +1,35 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>{% block title %}Your Symfony App{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+    <h1>Détails du client</h1>
+  
+        <dl class="row">
+            <dt class="col-sm-3">Nom du client</dt>
+            <dd class="col-sm-9">{{ clients.nom_client }}</dd>
+            <dt class="col-sm-3">Prénom du client</dt>
+            <dd class="col-sm-9">{{ clients.prenom_client }}</dd>
+             <dt class="col-sm-3">adresse_client</dt>
+            <dd class="col-sm-9">{{ clients.adresse_client }}</dd>
+             <dt class="col-sm-3">date_de_naissance</dt>
+            <dd class="col-sm-9">{{ clients.date_de_naissance |date('Y-m-d') }}</dd>
+             <dt class="col-sm-3">situation_familiale</dt>
+            <dd class="col-sm-9">{{ clients.situation_familiale }}</dd>
+            <dt class="col-sm-3">profession</dt>
+            <dd class="col-sm-9">{{ clients.profession }}</dd>
+            {# Add other fields of the client here #}
+        </dl>
+    
+{% endblock %}
+</body>
+</html>
