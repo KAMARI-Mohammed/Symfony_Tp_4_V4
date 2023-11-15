@@ -1,119 +1,51 @@
-/*==============================================================*/
-/* Table: AGENCES                                               */
-/*==============================================================*/
-create table AGENCES (
-   AGENCE_ID            int                  not null,
-   NOM_AGENCE           varchar(20)          null,
-   ADRESSE_AGENCE       varchar(50)          null,
-   constraint PK_AGENCES primary key nonclustered (AGENCE_ID)
+#Script de Base de Données
+CREATE TABLE Client (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_client VARCHAR(100),
+    prenom_client VARCHAR(100),
+    adresse_client VARCHAR(255),
+    date_de_naissance DATE,
+    situation_familiale ENUM('célibataire', 'marié', 'divorcé', 'veuf') NOT NULL,
+    profession VARCHAR(100)
 );
-/*==============================================================*/
-/* Table: CLIENT                                                */
-/*==============================================================*/
-create table CLIENT (
-   CLIENT_ID            int                  not null,
-   NOM_CLIENT           varchar(20)          null,
-   ADRESSE_CLIENT       varchar(50)          null,
-   DATE_DE_NAISSANCE    datetime             null,
-   SITUATION_FAMILIALE  varchar(20)          null,
-   PROFESSION           varchar(20)          null,
-   constraint PK_CLIENT primary key nonclustered (CLIENT_ID)
+CREATE TABLE compte (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    type ENUM('courant', 'épargne', 'joint', 'entreprise') NOT NULL,
+    date_ouverture DATE,
+    solde DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    FOREIGN KEY (client_id) REFERENCES client(id)
 );
 
-/*==============================================================*/
-/* Table: COMPTE                                                */
-/*==============================================================*/
-create table COMPTE (
-   COMPTE_ID            int                  not null,
-   CLIENT_ID            int                  not null,
-   TYPE                 varchar(20)          null,
-   DATE_OUVERTURE       datetime             null,
-   SOLDE                double precision     null,
-   constraint PK_COMPTE primary key nonclustered (COMPTE_ID)
-);
-/*==============================================================*/
-/* Index: POSSEDER_FK                                           */
-/*==============================================================*/
-create index POSSEDER_FK on COMPTE (
-CLIENT_ID ASC
-);
-/*==============================================================*/
-/* Table: CONSEILLERS                                           */
-/*==============================================================*/
-create table CONSEILLERS (
-   CONSEILLER_ID        int                  not null,
-   AGENCE_ID            int                  not null,
-   NOM_CONSEILLER       varchar(20)          null,
-   PRENOM_CONSEILLER    varchar(20)          null,
-   EMAIL                varchar(20)          null,
-   constraint PK_CONSEILLERS primary key nonclustered (CONSEILLER_ID)
-);
-/*==============================================================*/
-/* Index: TRAVAILLER_FK                                         */
-/*==============================================================*/
-create index TRAVAILLER_FK on CONSEILLERS (
-AGENCE_ID ASC
+CREATE TABLE lignes_compte (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    compte_id INT,
+    date_operation DATE,
+    description VARCHAR(255),
+    montant DECIMAL(15, 2) NOT NULL,
+    FOREIGN KEY (compte_id) REFERENCES compte(id)
 );
 
-/*==============================================================*/
-/* Table: LIGNES_COMPTES                                        */
-/*==============================================================*/
-create table LIGNES_COMPTES (
-   LIGNE_ID             int                  not null,
-   COMPTE_ID            int                  not null,
-   DATE_OPERATION       datetime             null,
-   DESCRIPTION          varchar(50)          null,
-   MONTANT              double precision     null,
-   constraint PK_LIGNES_COMPTES primary key nonclustered (LIGNE_ID)
+CREATE TABLE agence (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_agence VARCHAR(100),
+    adresse_agence VARCHAR(255)
+    
 );
 
-/*==============================================================*/
-/* Index: CONTIENT_FK                                           */
-/*==============================================================*/
-create index CONTIENT_FK on LIGNES_COMPTES (
-COMPTE_ID ASC
+CREATE TABLE conseiller (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_conseiller VARCHAR(100),
+    prenom_conseiller VARCHAR(100),
+    email VARCHAR(100),
+    agence_id INT,
+    FOREIGN KEY (agence_id) REFERENCES agence(id)
 );
 
-/*==============================================================*/
-/* Table: RESPONSABLE                                           */
-/*==============================================================*/
-create table RESPONSABLE (
-   CONSEILLER_ID        int                  not null,
-   CLIENT_ID            int                  not null,
-   constraint PK_RESPONSABLE primary key nonclustered (CONSEILLER_ID, CLIENT_ID)
+CREATE TABLE relation_client_conseiller (
+    client_id INT,
+    conseiller_id INT,
+    PRIMARY KEY (client_id, conseiller_id),
+    FOREIGN KEY (client_id) REFERENCES client(id),
+    FOREIGN KEY (conseiller_id) REFERENCES conseiller(id)
 );
-
-/*==============================================================*/
-/* Index: RESPONSABLE2_FK                                       */
-/*==============================================================*/
-create index RESPONSABLE2_FK on RESPONSABLE (
-CONSEILLER_ID ASC
-);
-
-/*==============================================================*/
-/* Index: RESPONSABLE_FK                                        */
-/*==============================================================*/
-create index RESPONSABLE_FK on RESPONSABLE (
-CLIENT_ID ASC
-);
-
-alter table COMPTE
-   add constraint FK_COMPTE_POSSEDER_CLIENT foreign key (CLIENT_ID)
-      references CLIENT (CLIENT_ID);
-
-alter table CONSEILLERS
-   add constraint FK_CONSEILL_TRAVAILLE_AGENCES foreign key (AGENCE_ID)
-      references AGENCES (AGENCE_ID);
-
-alter table LIGNES_COMPTES
-   add constraint FK_LIGNES_C_CONTIENT_COMPTE foreign key (COMPTE_ID)
-      references COMPTE (COMPTE_ID);
-
-alter table RESPONSABLE
-   add constraint FK_RESPONSA_RESPONSAB_CLIENT foreign key (CLIENT_ID)
-      references CLIENT (CLIENT_ID);
-
-alter table RESPONSABLE
-   add constraint FK_RESPONSA_RESPONSAB_CONSEILL foreign key (CONSEILLER_ID)
-      references CONSEILLERS (CONSEILLER_ID)
-
