@@ -1,0 +1,50 @@
+CREATE TABLE Client (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_client VARCHAR(100),
+    prenom_client VARCHAR(100),
+    adresse_client VARCHAR(255),
+    date_de_naissance DATE,
+    situation_familiale ENUM('célibataire', 'marié', 'divorcé', 'veuf') NOT NULL,
+    profession VARCHAR(100)
+);
+CREATE TABLE compte (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT,
+    type ENUM('courant', 'épargne', 'joint', 'entreprise') NOT NULL,
+    date_ouverture DATE,
+    solde DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    FOREIGN KEY (client_id) REFERENCES client(id)
+);
+
+CREATE TABLE lignes_compte (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    compte_id INT,
+    date_operation DATE,
+    description VARCHAR(255),
+    montant DECIMAL(15, 2) NOT NULL,
+    FOREIGN KEY (compte_id) REFERENCES compte(id)
+);
+
+CREATE TABLE agence (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_agence VARCHAR(100),
+    adresse_agence VARCHAR(255)
+    
+);
+
+CREATE TABLE conseiller (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_conseiller VARCHAR(100),
+    prenom_conseiller VARCHAR(100),
+    email VARCHAR(100),
+    agence_id INT,
+    FOREIGN KEY (agence_id) REFERENCES agence(id)
+);
+
+CREATE TABLE relation_client_conseiller (
+    client_id INT,
+    conseiller_id INT,
+    PRIMARY KEY (client_id, conseiller_id),
+    FOREIGN KEY (client_id) REFERENCES client(id),
+    FOREIGN KEY (conseiller_id) REFERENCES conseiller(id)
+);

@@ -1,11 +1,14 @@
 <?php
-require_once 'Data_Object\Data_Access_Object\ClientDAO';
+namespace App\services;
+use App\Data_Object\Data_Access_Object\ClientDAO;
+
 
 class ClientService {
     private $clientDAO;
 
-    public function __construct() {
-        $this->clientDAO = new ClientDAO();
+
+    public function __construct(ClientDAO $clientDAO) {
+        $this->clientDAO = $clientDAO;
     }
 
     public function getClientByID($clientID) {
@@ -13,7 +16,7 @@ class ClientService {
     }
 
     public function getListeClients() {
-        $clients = $this->clientDAO->getListeClients(); 
+        $clients = $this->clientDAO->getListeClients();
         return $clients;
     }
 }

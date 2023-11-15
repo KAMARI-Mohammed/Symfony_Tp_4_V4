@@ -6,8 +6,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Client; 
-
+use App\Entity\Client;
+use App\services\ClientService ;
 class ClientController extends AbstractController
 {
     #[Route('/client', name: 'app_client')]
@@ -43,12 +43,16 @@ class ClientController extends AbstractController
         ]);
     }
 
+    
 
     #[Route('/clientDO', name: 'app_home')]
-    public function index(): Response
+    public function listClients(ClientService $clientService): Response
     {
+        $clients = $clientService->getListeClients(); // Use the injected parameter $clientService
+
+        // You can use Symfony's rendering capabilities (Twig) for better template management
         return $this->render('client/detailsDO.html.twig', [
-            'controller_name' => 'HomeController',
-        ]); 
+            'clients' => $clients,
+        ]);
     }
 }

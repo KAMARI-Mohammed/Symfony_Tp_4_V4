@@ -1,6 +1,10 @@
 <?php
-require_once 'Database\database.php';
-require_once 'Data_Object\Data_Transfer_Object\ClientDTO';
+
+namespace App\Data_Object\Data_Access_Object;
+use App\Database;
+use  App\Entity\Client;
+use PDO;
+use PDOException;
 
 class ClientDAO {
     private $conn;
@@ -11,6 +15,7 @@ class ClientDAO {
             $this->conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
+            
             echo "Erreur de connexion : " . $e->getMessage();
         }
     }
@@ -21,8 +26,8 @@ class ClientDAO {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $clientDTO = new ClientDTO();
-        $clientDTO->ID = $result['ID'];
+        $clientDTO = new Client();
+        $clientDTO->id = $result['ID'];
         $clientDTO->nom_client = $result['nom_client'];
         $clientDTO->prenom_client = $result['prenom_client'];
         $clientDTO->adresse_client = $result['adresse_client'];
@@ -39,8 +44,8 @@ class ClientDAO {
     
         $clients = array();
         foreach ($results as $result) {
-            $clientDTO = new ClientDTO();
-        $clientDTO->ID = $result['ID'];
+            $clientDTO = new Client();
+        $clientDTO->id = $result['ID'];
         $clientDTO->nom_client = $result['nom_client'];
         $clientDTO->prenom_client = $result['prenom_client'];
         $clientDTO->adresse_client = $result['adresse_client'];

@@ -1,4 +1,9 @@
 <?php
+namespace App\Database;
+
+use PDO;
+use PDOException;
+
 $servername="localhost";
 $username="root";
 $password="Bakchlamo@123456";

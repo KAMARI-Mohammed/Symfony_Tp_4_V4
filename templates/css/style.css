@@ -1,2 +1,15 @@
-/* assets/css/app.css */
-@import '~bootstrap/dist/css/bootstrap.css';
+/* Apply styles to the definition list */
+dl {
+    margin-bottom: 20px;
+}
+
+/* Style for definition term (dt) */
+dt {
+    font-weight: bold;
+}
+
+/* Style for definition description (dd) */
+dd {
+    margin-inline-start: 0; /* Remove default indentation */
+    margin-bottom: 8px; /* Adjust spacing between terms and descriptions */
+}
